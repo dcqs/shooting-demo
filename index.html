@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="射击演示视频展示页" />
+  <title>射击演示 · 视频展示</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#top" id="brandLogo">
+        <span class="nav__logo">◎</span>
+        <span class="nav__title" id="navTitle">射击演示</span>
+      </a>
+      <nav class="nav__links">
+        <a href="#video" class="nav__link">视频</a>
+        <a href="#intro" class="nav__link">简介</a>
+        <a href="#content" class="nav__link">更多内容</a>
+      </nav>
+      <div class="nav__admin">
+        <span class="admin-badge" id="adminBadge" hidden>管理员</span>
+        <button class="btn btn--ghost nav__edit" id="openEditorBtn" type="button" hidden>✎ 内容管理</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- 主视频展示区 -->
+    <section class="hero" id="video">
+      <div class="hero__bg"></div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow" id="heroEyebrow">ACTION DEMO</p>
+        <h1 class="hero__title" id="heroTitle">射击演示实录</h1>
+        <p class="hero__subtitle" id="heroSubtitle">一段展示核心动作与流程的实战演示</p>
+
+        <div class="player">
+          <div class="player__frame">
+            <video id="mainVideo" class="player__video" controls preload="auto" playsinline
+                   poster="assets/poster.jpg">
+              <source src="assets/shooting-demo.mp4" type="video/mp4" />
+              您的浏览器不支持 video 标签，请使用现代浏览器打开。
+            </video>
+            <div class="player__loading" id="videoLoading"><span class="spinner"></span>视频加载中…</div>
+          </div>
+          <div class="player__bar">
+            <a class="btn btn--accent" id="downloadVideo" href="assets/shooting-demo.mp4" download>⬇ 下载视频</a>
+            <button class="btn btn--ghost" id="fullscreenBtn" type="button">⛶ 全屏播放</button>
+            <span class="player__hint">本地托管 · 支持全屏观看</span>
+          </div>
+        </div>
+
+        <ul class="hero__meta">
+          <li>🎯 射击演示</li>
+          <li>🎞 MP4 视频</li>
+          <li>🔒 内容由站主维护</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 视频简介 -->
+    <section class="intro" id="intro">
+      <div class="intro__card">
+        <div class="intro__aside">
+          <span class="intro__tag">ABOUT</span>
+          <h2 class="section__title">关于本演示</h2>
+        </div>
+        <div class="intro__body">
+          <p id="introDesc">
+            这是一段射击主题的演示视频，记录核心动作与操作流程。页面下方会持续更新与之相关的
+            图文说明、图集、流程时间线与资源链接，作为该演示的配套记录。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 动态内容区：所有可扩展内容都在这里渲染 -->
+    <section class="content" id="content">
+      <div class="section__head">
+        <h2 class="section__title">更多内容</h2>
+        <p class="section__desc">以下为与演示相关的补充内容。</p>
+      </div>
+      <div class="content__grid" id="contentRoot">
+        <!-- 内容块由 app.js 注入 -->
+      </div>
+      <p class="content__empty" id="contentEmpty" hidden>暂无补充内容。</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <p>射击演示展示页 · 数据驱动的内容系统</p>
+      <div class="footer__links">
+        <a href="#top">回到顶部</a>
+        <a href="https://github.com/dcqs/shooting-demo" target="_blank" rel="noopener">GitHub 仓库</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 回到顶部 -->
+  <button class="to-top" id="toTop" type="button" aria-label="回到顶部" hidden>↑</button>
+
+  <!-- 内容管理抽屉（仅管理员可见） -->
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__mask" id="drawerMask"></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-label="内容管理">
+      <div class="drawer__head">
+        <h3>内容管理</h3>
+        <div class="drawer__head-actions">
+          <button class="btn btn--ghost btn--sm" id="logoutBtn" type="button" hidden>退出</button>
+          <button class="icon-btn" id="closeDrawer" type="button" aria-label="关闭">✕</button>
+        </div>
+      </div>
+      <div class="drawer__actions">
+        <button class="btn btn--accent" id="addBlockBtn" type="button">＋ 添加内容块</button>
+        <div class="drawer__io">
+          <button class="btn btn--ghost" id="importBtn" type="button">导入</button>
+          <button class="btn btn--ghost" id="exportBtn" type="button">导出</button>
+          <button class="btn btn--ghost" id="resetBtn" type="button">重置</button>
+        </div>
+        <input type="file" id="importFile" accept="application/json" hidden />
+      </div>
+      <ul class="block-list" id="blockList"><!-- 内容块列表 --></ul>
+      <p class="drawer__tip">用「↑ / ↓」调整顺序；编辑完成后导出 JSON 并推送到 GitHub 才会对外生效。</p>
+    </aside>
+  </div>
+
+  <!-- 内容块编辑弹窗 -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__mask" id="modalMask"></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-label="编辑内容块">
+      <div class="modal__head">
+        <h3 id="modalTitle">添加内容块</h3>
+        <button class="icon-btn" id="closeModal" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"><!-- 表单由 app.js 生成 --></div>
+      <div class="modal__foot">
+        <button class="btn btn--ghost" id="cancelModal" type="button">取消</button>
+        <button class="btn btn--accent" id="saveModal" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管理员登录弹窗 -->
+  <div class="modal" id="loginModal" hidden>
+    <div class="modal__mask" id="loginMask"></div>
+    <div class="modal__card modal__card--sm" role="dialog" aria-modal="true" aria-label="管理员登录">
+      <div class="modal__head">
+        <h3>管理员验证</h3>
+        <button class="icon-btn" id="closeLogin" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="modal__body">
+        <p class="login__tip">此区域仅站主可进入，用于管理展示内容。</p>
+        <div class="field">
+          <label for="adminPwd">管理密码</label>
+          <input type="password" id="adminPwd" placeholder="请输入管理密码" autocomplete="current-password" />
+        </div>
+        <p class="login__err" id="loginErr" hidden>密码不正确，请重试。</p>
+      </div>
+      <div class="modal__foot">
+        <button class="btn btn--ghost" id="cancelLogin" type="button">取消</button>
+        <button class="btn btn--accent" id="submitLogin" type="button">进入管理</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

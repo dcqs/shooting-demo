@@ -1,0 +1,14 @@
+# WorkBuddy 项目数据（不部署）
+.workbuddy/
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+*.log
+
+# 本地截图产物
+preview*.png
+
+# ffmpeg 测试临时目录
+_test/
+chk_*.png
